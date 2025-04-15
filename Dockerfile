@@ -1,13 +1,23 @@
 FROM node:20-alpine
 
-# Define application run directory.
+# Define application run directory
 WORKDIR /srv/image-service
 
-# Install vendor via Composer.
+# Install system dependencies needed for mozjpeg and other native builds
+RUN apk add --no-cache \
+    autoconf \
+    automake \
+    libtool \
+    nasm \
+    make \
+    g++ \
+    python3
+
+# Copy package.json and install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Add application.
+# Copy application files
 COPY ./ ./
 
 # Begin application
