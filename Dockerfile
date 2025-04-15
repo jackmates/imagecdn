@@ -1,28 +1,31 @@
 FROM node:20-alpine
 
-# Define application run directory
 WORKDIR /srv/image-service
 
-# Install build dependencies
+# Add required tools and build dependencies
 RUN apk add --no-cache \
   bash \
-  build-base \
+  curl \
+  git \
+  make \
+  gcc \
+  g++ \
   autoconf \
   automake \
   libtool \
   nasm \
+  zlib-dev \
   python3 \
   pkgconfig \
-  file \
-  git \
-  zlib-dev
+  file
 
-# Copy package.json and install dependencies
+# Clone libimagequant manually into expected location for pngquant-bin
+RUN mkdir -p /srv/image-service/node_modules/pngquant-bin/lib && \
+    git clone --depth=1 https://github.com/ImageOptim/libimagequant.git /srv/image-service/node_modules/pngquant-bin/lib
+
 COPY package*.json ./
 RUN npm install
 
-# Copy the rest of your app
 COPY ./ ./
 
-# Start your app
 CMD make start PORT=$PORT DEBUG=$DEBUG ENV=$SYMFONY_ENV
