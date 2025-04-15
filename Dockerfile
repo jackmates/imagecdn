@@ -1,14 +1,27 @@
 FROM node:18
 
-# Define application run directory.
+# Set working directory
 WORKDIR /srv/image-service
 
-# Install vendor via Composer.
+# Install build tools and libimagequant
+RUN apt-get update && apt-get install -y \
+  build-essential \
+  git \
+  autoconf \
+  automake \
+  libtool \
+  nasm \
+  curl \
+  libpng-dev \
+  libimagequant-dev \
+  && rm -rf /var/lib/apt/lists/*
+
+# Copy and install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Add application.
-COPY ./ ./
+# Copy the rest of the app
+COPY . .
 
-# Begin application
+# Run the app
 CMD make start PORT=$PORT DEBUG=$DEBUG ENV=$SYMFONY_ENV
