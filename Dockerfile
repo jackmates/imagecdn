@@ -3,7 +3,7 @@ FROM node:20-alpine
 # Define application run directory
 WORKDIR /srv/image-service
 
-# Install system dependencies needed to build native modules like mozjpeg
+# Install system dependencies needed for native modules (mozjpeg, pngquant, etc.)
 RUN apk add --no-cache \
     autoconf \
     automake \
@@ -13,7 +13,8 @@ RUN apk add --no-cache \
     g++ \
     python3 \
     pkgconfig \
-    file
+    file \
+    bash
 
 # Copy package.json and install dependencies
 COPY package*.json ./
