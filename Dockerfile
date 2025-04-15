@@ -1,4 +1,4 @@
-FROM node:10
+FROM node:20-alpine
 
 # Define application run directory.
 WORKDIR /srv/image-service
